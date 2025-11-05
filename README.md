@@ -5,7 +5,8 @@ Lavínnia Luize Canossa Radaeli - 04722099
 Esse programa está utilizando NodeJS com Reactive-Native para criar o frontend e usando um banco MYSQL para salvar os dados necessários.
 Para auxiliar na conversa entre o front e o banco, foi feito uma API em Java, usando JPA para configurações e um Token JWT para segurança em algumas funções da API.
 
-No banco de dados, foram utilizadas duas tabelas: “Login” e “Games”. (eu coloco as estruturas certinho depois, agora não tenho o MYSQL)
+No banco de dados, foram utilizadas duas tabelas: “Login” e “Games”. Na tabela de Login, tem os campos "email" e "senha", ambos Varchar(100).
+Na tabela de Games, tem os campos "name_game", "age_rating", "console", "synopsis" (todos esses Varchar(100)); "price" em Decimal(10,2) e "genre", um SET com algumas opções de gênero de jogo.
 
 Antes de rodar o frontend, precisa necessariamente rodar primeiro a API. Para rodar o frontend, precisa ser em um prompt de comando, ir para a pasta onde está o código e rodar o comando `npx run`. 
 
