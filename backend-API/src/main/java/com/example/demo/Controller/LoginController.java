@@ -18,7 +18,7 @@ public class LoginController {
     @Autowired
     private LoginService service;
 
-    @PostMapping(value = Constants.API_LOGIN, consumes = "application/json")
+    @PostMapping(value = Constants.API_REGISTER, consumes = "application/json")
     public ResponseEntity<Login> create(@RequestBody LoginDTO dto){
         service.save(dto);
 

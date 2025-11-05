@@ -63,27 +63,21 @@ public class WebClientHandler {
 
     }
 
-    public Mono<String> validator(String Authorization){
-        //Defining the HTTP Method
-        WebClient.UriSpec<WebClient.RequestBodySpec> uriSpec = client.method(HttpMethod.GET);
+    public String validator(String Authorization) {
 
-        //Specifying URL
-        WebClient.RequestBodySpec uri = uriSpec.uri("verify/");
-
-        //Filling Header
-        WebClient.ResponseSpec responseSpec = uri.header(
-                        HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
+        String responseBody = client.method(HttpMethod.GET)
+                .uri("/verify")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", Authorization)
-                .acceptCharset(StandardCharsets.UTF_8)
-                .ifNoneMatch("*")
-                .ifModifiedSince(ZonedDateTime.now())
-                .retrieve();
+                .retrieve()
+                .onStatus(status -> status.isError(), clientResponse -> {
+                    return clientResponse.bodyToMono(String.class)
+                            .flatMap(errorBody -> Mono.error(new RuntimeException("Token Inválido. Detalhe: " + errorBody)));
+                })
+                .bodyToMono(String.class)
+                .block();
 
-        Mono<String> response = uri.retrieve().bodyToMono(String.class);
-
-        return response;
-
+        return responseBody;
     }
 
 }

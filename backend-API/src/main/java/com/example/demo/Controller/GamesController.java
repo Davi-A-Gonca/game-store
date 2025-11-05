@@ -6,6 +6,7 @@ import com.example.demo.Documents.Games;
 import com.example.demo.Documents.dto.GamesDTO;
 import com.example.demo.Services.GamesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,16 @@ public class GamesController {
 
     @PostMapping(Constants.API_GAMES)
     public ResponseEntity<Games> create(@RequestHeader String Authenticator, @RequestBody GamesDTO dto){
-        Mono<String> response = handler.validator(Authenticator);
+        if (Authenticator == null || !Authenticator.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing or Invalid Bearer Token format.");
+        }
 
-        if(Objects.equals(response.block(), Authenticator)){
+        String rawToken = Authenticator.substring(7);
+        String token = rawToken.trim();
+
+        String response = handler.validator(token);
+
+        if(Objects.equals(response, token)){
             return ResponseEntity.ok(service.save(dto));
         }
 
