@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Documents.Login;
 import com.example.demo.Documents.dto.LoginDTO;
 import com.example.demo.Safety.Constants;
 import com.example.demo.Safety.WebClientHandler;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @RestController
 public class AuthenticationController {
@@ -26,8 +29,15 @@ public class AuthenticationController {
     @PostMapping(Constants.API_LOGIN)
     public ResponseEntity<String> login(@RequestBody LoginDTO dto){
         WebClient.ResponseSpec responseSpec = handler.webBuilderLogin(dto, "/login");
+        Optional<Login> loginFound = service.findByEmail(dto.getEmail());
 
-        if (responseSpec != null){
+        if(loginFound.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid User and/or Password");
+        }
+
+        Login login = loginFound.get();
+
+        if (responseSpec != null && login.getSenha() != dto.getSenha()){
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", tokenProvider.tokenGenerator(dto.getEmail()));
             String test = tokenProvider.tokenGenerator(dto.getEmail());

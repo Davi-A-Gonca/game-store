@@ -32,4 +32,6 @@ public class LoginService {
     public void deleteById(UUID id){
         repository.deleteById(id);
     }
+
+    public Optional<Login> findByEmail(String Email){return repository.findFirstByEmail(Email);}
 }
