@@ -1,6 +1,6 @@
 Conrado Perini Fracacio - 04722073
 Davi Araújo Gonçalves - 04722033
-Lavínnia Luize Canossa Radaeli - 04722099
+Lavínnia Luize Canossa Radaeli - 04722095
 
 # Game Store
 Esse programa está utilizando NodeJS com Reactive-Native para criar o frontend e usando um banco MYSQL para salvar os dados necessários.
